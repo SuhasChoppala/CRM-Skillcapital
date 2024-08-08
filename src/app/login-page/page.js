@@ -28,64 +28,48 @@ export default function LoginPage() {
         900: '#1C2025',
     };
 
-    const TextareaAutosize = styled(BaseTextareaAutosize)(
-        ({ theme }) => `
-        box-sizing: border-box;
-        width: 320px;
-        font-family: 'IBM Plex Sans', sans-serif;
-        font-size: 0.875rem;
-        font-weight: 400;
-        line-height: 1.5;
-        padding: 8px 12px;
-        border-radius: 8px;
-        color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
-        background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
-        border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
-        box-shadow: 0px 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
-        resize: none;
+    // const TextareaAutosize = styled(BaseTextareaAutosize)(
+    //     ({ theme }) => `
+    //     box-sizing: border-box;
+    //     width: 320px;
+    //     font-family: 'IBM Plex Sans', sans-serif;
+    //     font-size: 0.875rem;
+    //     font-weight: 400;
+    //     line-height: 1.5;
+    //     padding: 8px 12px;
+    //     border-radius: 8px;
+    //     color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+    //     background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+    //     border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+    //     box-shadow: 0px 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+    //     resize: none;
 
-        &:hover {
-            border-color: ${blue[400]};
-        }
+    //     &:hover {
+    //         border-color: ${blue[400]};
+    //     }
 
-        &:focus {
-            border-color: ${blue[400]};
-            box-shadow: 0 0 0 3px ${theme.palette.mode === 'dark' ? blue[600] : blue[200]};
-        }
+    //     &:focus {
+    //         border-color: ${blue[400]};
+    //         box-shadow: 0 0 0 3px ${theme.palette.mode === 'dark' ? blue[600] : blue[200]};
+    //     }
 
-        // firefox
-        &:focus-visible {
-            outline: 0;
-        }
-        `,
-    );
+    //     // firefox
+    //     &:focus-visible {
+    //         outline: 0;
+    //     }
+    //     `,
+    // );
 
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState({ username: '', password: '' });
+    const [errors, setErrors] = useState({ username: false, password: false });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let valid = true;
-        let errors = { username: '', password: '' };
-
-        if (username.trim() === '') {
-            errors.username = 'Please enter username';
-            valid = false;
-        }
-        if (password.trim() === '') {
-            errors.password = 'Please enter password';
-            valid = false;
-        }
-
-        setErrors(errors);
-
-        if (valid) {
-            // Submit the form
-            console.log('Form submitted');
-        }
+        let newErrors = { username: !username, password: !password };
+        setErrors(newErrors);
     };
 
     return (
@@ -95,26 +79,43 @@ export default function LoginPage() {
                     <img src="https://crm.skill-capital.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fskillcapital.41121682.png&w=640&q=75" width={400} className='text-center'></img>
                 </div>
                 <div className='mobiles:mt-8 mt-10 xl:mt-8 bg-white border border-grey-300 p-6 rounded-lg shadow-lg w-full xl:w-[32rem] md:w-full'>
-                    <div>
-                        <lable className="block text-sm font-normal leading-6 text-gray-900">User Name</lable>
-                        <TextareaAutosize aria-label="empty textarea" className='w-full p-3' onChange={(e) => setUsername(e.target.value)} />
-                        {errors.username && <p className='text-sm text-red-600'>{errors.username}</p>}
-                    </div>
-                    <div className='mt-5'>
-                        <lable className="block text-sm font-normal leading-6 text-gray-900">Password</lable>
-                        <TextareaAutosize aria-label="empty textarea" className='w-full p-3' onChange={(e) => setPassword(e.target.value)} />
-                        {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>}
-                    </div>
-                    <div className='mt-9'>
-                        <button type="submit" onClick={handleSubmit} className="flex w-full justify-center rounded-lg bg-gradient-to-r from-orange-300 to-pink-500 p-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Login</button>
-                    </div>
-                    <div className='flex gap-2 mt-8'>
-                        <Checkbox {...label} className='h-5 w-5' />
-                        <span className='font-normal text-sm'>Remember me</span>
-                    </div>
-                    <div className='text-center mt-24 text-gray-500 text-sm font-medium block'>
-                        <h1>©2024, All rights reserved</h1>
-                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label className="block text-sm font-normal leading-6 text-gray-900">User Name</label>
+                            <input
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                aria-label="username"
+                                className='w-full py-2.5 px-2 text-base font-normal leading-relaxed border rounded-lg bg-white text-gray-900 border-gray-200 shadow-sm focus:border-blue-400  focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors duration-300 hover:border-blue-400'
+                            />
+                            {errors.username && <p className='text-sm text-red-600'>Please enter username</p>}
+                        </div>
+                        <div className='mt-5'>
+                            <label className="block text-sm font-normal leading-6 text-gray-900">Password</label>
+                            <input
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                aria-label="password"
+                                className='w-full py-2.5 px-2 text-base font-normal leading-relaxed border rounded-lg bg-white text-gray-900 border-gray-200 shadow-sm focus:border-blue-400  focus:ring-2 focus:ring-blue-200 focus:outline-none transition-colors duration-300 hover:border-blue-400'
+                            />
+                            {errors.password && <p className="text-red-600 text-sm">Please enter password</p>}
+                        </div>
+                        <div className='mt-9'>
+                            <button
+                                type="submit"
+                                class="flex w-full justify-center rounded-lg bg-gradient-to-r from-orange-300 to-pink-500 p-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            >
+                                Login
+                            </button>
+                        </div>
+                        <div className='flex gap-2 mt-8'>
+                            <Checkbox {...label} className='h-5 w-5' />
+                            <span className='font-normal text-sm'>Remember me</span>
+                        </div>
+                        <div className='text-center mt-24 text-gray-500 text-sm font-medium block'>
+                            <h1>©2024, All rights reserved</h1>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div className='hidden sm:flex w-2/4 flex-col justify-between'>
